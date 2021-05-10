@@ -50,7 +50,7 @@
         .score {
             font-size: 2rem;
             padding: 1rem 1rem;
-            border: 1px dashed white;
+            border: 2px solid white;
             border-radius: 5px;
             width: 3rem;
             text-align: center;
@@ -114,6 +114,8 @@
             const UPDATE_INTERVAL_MS = 3000;
             const LAST_MATCHES_SHOWN_COUNT = 1;
 
+            const updateHandle = 0;
+
             const App = {
                 data() {
                     return {
@@ -125,6 +127,7 @@
 
                 methods: {
                     updateMatches() {
+                        clearTimeout(updateHandle);
                         fetch(`https://www.elevenvr.club/accounts/${this.userID}/matches`)
                             .then(res => res.json())
                             .then(data => {
@@ -134,21 +137,20 @@
 
                                     const scores = m.relationships.rounds.data.map((r) => {
                                         return data.included.find((inclRound) => inclRound.id == r.id && inclRound.type === r.type).attributes;
-                                    });
+                                    }).reverse();
                                     return {
                                         ...m,
                                         scores
                                     }
                                 })
                             });
+                        
+                        updateHandle = setTimeout(() => this.updateMatches(), UPDATE_INTERVAL_MS);
                     },
                 },
 
                 mounted() {
                     this.updateMatches();
-                    setInterval(() => {
-                        this.updateMatches();
-                    }, UPDATE_INTERVAL_MS)
                 }
             }
 
