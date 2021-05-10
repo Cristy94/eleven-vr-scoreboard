@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElevenVR Scoreboard</title>
+
+    <style>
+        :root {
+            --block-bg: #121212;
+        }
+
+        body {
+            font-family: Arial;
+        }
+
+
+        .match {
+            padding: 1rem 2rem;
+            background: var(--block-bg);
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .player-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-grow: 1;
+        }
+
+        .player {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            width: 12em;
+        }
+
+        .player h3 {
+            margin: 0 0 0.3rem 0;
+        }
+
+        .player__info {
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .score {
+            font-size: 2rem;
+            padding: 1rem 1rem;
+            border: 1px dashed white;
+            border-radius: 5px;
+            width: 3rem;
+            text-align: center;
+            margin: 0 0.5rem;
+        }
+
+        .player-row:first-child .score {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .player-row:last-child .score {
+            border-top: none;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id='matches'>
+          <div v-for="match in matches" :key="match.id" class="match">     
+            <div class="player-row">
+              <Player :player="match.attributes['home-team'][0]">
+              </Player>
+              <div v-for="score in match.scores" class="score">
+                {{score['home-score']}}
+              </div> 
+            </div>
+            
+            <div class="player-row">
+              <Player :player="match.attributes['away-team'][0]">
+              </Player>
+              <div v-for="score in match.scores" class="score">
+                {{score['away-score']}}
+              </div> 
+            </div>     
+            
+          </div>
+        </div>
+      </div>
+
+      <script>
+            const UPDATE_INTERVAL_MS = 5000;
+            const LAST_MATCHES_SHOWN_COUNT = 2;
+
+            const App = {
+                data() {
+                    return {
+                        counter: 0,
+                        userID: '60531',
+                        matches: [],
+                    }
+                },
+
+                methods: {
+                    updateMatches() {
+                        fetch(`https://www.elevenvr.club/accounts/${this.userID}/matches`)
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log(data);
+                                this.matches = data.data.slice(0, LAST_MATCHES_SHOWN_COUNT);
+                                this.matches = this.matches.map((m) => {
+
+                                    const scores = m.relationships.rounds.data.map((r) => {
+                                        return data.included.find((inclRound) => inclRound.id == r.id && inclRound.type === r.type).attributes;
+                                    });
+                                    return {
+                                        ...m,
+                                        scores
+                                    }
+                                })
+                            });
+                    },
+                },
+
+                mounted() {
+                    this.updateMatches();
+                    setInterval(() => {
+                        this.updateMatches();
+                    }, UPDATE_INTERVAL_MS)
+                }
+            }
+
+            var app = Vue.createApp(App);
+
+            app.component('Player', {
+                props: ['player'],
+                template: `
+                    <div class="player">
+                    <h3>
+                        {{ player.UserName }}
+                    </h3>
+                    <div class="player__info">
+                    <div>
+                        WR #{{ player.Rank }} ({{ player.ELO }} ELO)
+                    </div>
+                    <div> 
+                    </div>
+                    </div>
+                    </div>
+                `
+            });
+
+            app.mount('#app')
+      </script>
+</body>
+</html>
