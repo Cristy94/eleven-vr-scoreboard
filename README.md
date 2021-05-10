@@ -9,7 +9,7 @@ Live scoreboard for the [ElevenVR](https://www.elevenvr.net/) Table Tennis game,
 # How to use
 
 1. Open this page: **https://cristy94.github.io/eleven-vr-scoreboard/**
-2. Enter the userID (can be found by clicking on the UserID label, searching for the username and copying the ID showin in the URL)
+2. Enter the userID (can be found by clicking on the UserID label, searching for the username and copying the ID shown in the URL)
 3. The latest match of that user is displayed and the score is refreshed every 3 seconds.
 
 
