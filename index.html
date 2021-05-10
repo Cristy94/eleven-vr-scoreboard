@@ -152,9 +152,8 @@
                         fetch(`https://www.elevenvr.club/accounts/${this.userID}/matches`)
                             .then(res => res.json())
                             .then(data => {
-                                this.matches = data.data.slice(0, LAST_MATCHES_SHOWN_COUNT);
-                                this.matches = this.matches.map((m) => {
-
+                                const newMatches = data.data.slice(0, LAST_MATCHES_SHOWN_COUNT);
+                                this.matches = newMatches.map((m) => {
                                     const scores = m.relationships.rounds.data.map((r) => {
                                         return data.included.find((inclRound) => inclRound.id == r.id && inclRound.type === r.type).attributes;
                                     }).reverse();
