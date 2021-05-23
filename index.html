@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/vue@3.0.11/dist/vue.global.prod.js" integrity="sha384-RoYKiz86LLByaDkyg6pnB/EPSDmSxj0r+RP4zHQiGWlv7EdJMl4iiHNhMyBWiBqb" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3.0.11/dist/vue.global.prod.js"
+        integrity="sha384-RoYKiz86LLByaDkyg6pnB/EPSDmSxj0r+RP4zHQiGWlv7EdJMl4iiHNhMyBWiBqb"
+        crossorigin="anonymous"></script>
     <title>ElevenVR Scoreboard</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,600;1,700&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
-            --block-bg: #121212;
+            --block-bg: rgba(18, 18, 18, 0.9);
+            --score-vert-padding: 0.1rem;
         }
 
         body {
-            font-family: Arial;
+            font-family: 'DM Mono', monospace;
+            line-height: 1;
         }
 
 
@@ -30,6 +39,10 @@
             flex-grow: 1;
         }
 
+        .player-row:first-child .player {
+            flex-direction: column-reverse;
+        }
+
         .player {
             display: flex;
             flex-direction: column;
@@ -39,33 +52,61 @@
         }
 
         .player h3 {
-            margin: 0 0 0.3rem 0;
+            margin: 0.5rem 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1.4rem;
         }
 
         .player__info {
-            font-size: 0.8rem;
+            font-size: 1rem;
             text-align: center;
+            color: #aaa;
         }
 
         .score {
             font-size: 2rem;
+            margin: 0.3rem 0.2rem;
             padding: 1rem 1rem;
-            border: 2px solid white;
-            border-radius: 5px;
             width: 3rem;
             text-align: center;
-            margin: 0 0.5rem;
+            font-weight: 100;
+        }
+
+        .score--matches {
+            padding-left: 0;
+            font-weight: bold;
+            color: #bdff1f;
+            position: relative;
+        }
+
+        .score--matches:after {
+            content: ' ';
+            position: absolute;
+            right: 0;
+            top: -15%;
+            height: 130%;
+            width: 1px;
+            background: rgb(255, 255, 255);
+        }
+
+        .score:last-child {
+            border-right: none;
+            color: #ff5454;
+            font-weight: bold;
         }
 
         .player-row:first-child .score {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
+            padding-bottom: var(--score-vert-padding);
         }
 
         .player-row:last-child .score {
             border-top: none;
+            border-bottom: none;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
+            padding-top: var(--score-vert-padding);
         }
 
         #settings {
@@ -77,7 +118,7 @@
             border-radius: 5px;
         }
 
-        label + input {
+        label+input {
             margin-left: 0.5rem;
         }
 
@@ -90,110 +131,150 @@
         }
     </style>
 </head>
+
 <body>
     <div id="app">
         <div id="settings">
             <label for="userID"><a href="https://www.elevenvr.net/search" target="_blank">User ID</a></label>
-            <input name="userID" type="text"  v-model="userID" @change="userChanged"/>
+            <input name="userID" type="text" v-model="userID" @change="userChanged" />
         </div>
         <div id='matches'>
-          <div v-for="match in matches" :key="match.id" class="match">     
-            <div class="player-row">
-              <Player :player="match.attributes['home-team'][0]">
-              </Player>
-              <div v-for="score in match.scores" class="score">
-                {{score['home-score']}}
-              </div> 
+            <div v-for="match in matches" :key="match.id" class="match">
+                <div class="player-row">
+                    <Player :player="match.attributes['home-team'][0]">
+                    </Player>
+                    <div v-if="matchesWon + matchesLost > 0" class="score score--matches">
+                        {{match.attributes['home-team'][0].id == userID ? matchesWon : matchesLost}}
+                    </div>
+                    <div v-for="score in match.scores" class="score">
+                        {{score['home-score']}}
+                    </div>
+                </div>
+
+                <div class="player-row">
+                    <Player :player="match.attributes['away-team'][0]">
+                    </Player>
+                    <div v-if="matchesWon + matchesLost > 0" class="score score--matches">
+                        {{match.attributes['away-team'][0].id == userID ? matchesWon : matchesLost}}
+                    </div>
+                    <div v-for="score in match.scores" class="score">
+                        {{score['away-score']}}
+                    </div>
+                </div>
+
             </div>
-            
-            <div class="player-row">
-              <Player :player="match.attributes['away-team'][0]">
-              </Player>
-              <div v-for="score in match.scores" class="score">
-                {{score['away-score']}}
-              </div> 
-            </div>     
-            
-          </div>
         </div>
 
         <div id="credits">
             Scoreboard created by <a href="https://twitter.com/XCSme" target="_blank">XCS</a> 🏓
         </div>
-      </div>
+    </div>
 
-      <script>
-            const UPDATE_INTERVAL_MS = 3000;
-            const LAST_MATCHES_SHOWN_COUNT = 1;
-            const USERID_QUERY_PARAM = 'user';
+    <script>
+        const UPDATE_INTERVAL_MS = 3000;
+        const LAST_MATCHES_SHOWN_COUNT = 1;
+        const USERID_QUERY_PARAM = 'user';
 
-            let updateHandle = 0;
+        let updateHandle = 0;
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const userID = urlParams.get(USERID_QUERY_PARAM);
+        const urlParams = new URLSearchParams(window.location.search);
+        const userID = urlParams.get(USERID_QUERY_PARAM);
 
-            const App = {
-                data() {
-                    return {
-                        counter: 0,
-                        userID: userID || '60531',
-                        matches: [],
-                    }
-                },
-
-                methods: {
-                    userChanged() {
-                        urlParams.set(USERID_QUERY_PARAM, this.userID);
-                        history.pushState(null, null, "?" + urlParams.toString());
-                        this.updateMatches();
-                    },
-                    updateMatches() {
-                        clearTimeout(updateHandle);
-                        fetch(`https://www.elevenvr.club/accounts/${this.userID}/matches`)
-                            .then(res => res.json())
-                            .then(data => {
-                                const newMatches = data.data.slice(0, LAST_MATCHES_SHOWN_COUNT);
-                                this.matches = newMatches.map((m) => {
-                                    const scores = m.relationships.rounds.data.map((r) => {
-                                        return data.included.find((inclRound) => inclRound.id == r.id && inclRound.type === r.type).attributes;
-                                    }).reverse();
-                                    return {
-                                        ...m,
-                                        scores
-                                    }
-                                })
-                            });
-                        
-                        updateHandle = setTimeout(() => this.updateMatches(), UPDATE_INTERVAL_MS);
-                    },
-                },
-
-                mounted() {
-                    this.updateMatches();
+        const App = {
+            data() {
+                return {
+                    counter: 0,
+                    userID: userID || '60531',
+                    matches: [],
+                    matchesWon: 0,
+                    matchesLost: 0,
                 }
+            },
+
+            methods: {
+                userChanged() {
+                    urlParams.set(USERID_QUERY_PARAM, this.userID);
+                    history.pushState(null, null, "?" + urlParams.toString());
+                    this.updateMatches();
+                },
+                updateMatches() {
+                    clearTimeout(updateHandle);
+                    fetch(`https://www.elevenvr.club/accounts/${this.userID}/matches`)
+                        .then(res => res.json())
+                        .then(data => {
+
+                            // Count matches score for those opponents
+                            let otherIDPrevious = -1;
+                            this.matchesWon = 0;
+                            this.matchesLost = 0;
+                            try {
+                                for (const match of data.data) {
+                                    if (match.attributes.state !== 1) continue;
+                                    const user1 = match.attributes['home-user-id'];
+                                    const user2 = match.attributes['away-user-id'];
+
+                                    const otherID = user1 == this.userID ? user2 : user1;
+                                    if (otherIDPrevious !== -1 && otherIDPrevious !== otherID) {
+                                        break;
+                                    }
+
+                                    otherIDPrevious = otherID;
+
+                                    if (user1 == this.userID && match.attributes.winner === 0 || (user2 == this.userID && match.attributes.winner === 1)) {
+                                        this.matchesWon++;
+                                    } else {
+                                        this.matchesLost++;
+                                    }
+                                }
+                            } catch (e) {
+
+                            }
+
+                            console.log(this.matchesWon, this.matchesLost);
+
+                            const newMatches = data.data.slice(0, LAST_MATCHES_SHOWN_COUNT);
+                            this.matches = newMatches.map((m) => {
+                                const scores = m.relationships.rounds.data.map((r) => {
+                                    return data.included.find((inclRound) => inclRound.id == r.id && inclRound.type === r.type).attributes;
+                                }).reverse();
+                                return {
+                                    ...m,
+                                    scores
+                                }
+                            })
+                        });
+
+                    updateHandle = setTimeout(() => this.updateMatches(), UPDATE_INTERVAL_MS);
+                },
+            },
+
+            mounted() {
+                this.updateMatches();
             }
+        }
 
-            var app = Vue.createApp(App);
+        var app = Vue.createApp(App);
 
-            app.component('Player', {
-                props: ['player'],
-                template: `
+        app.component('Player', {
+            props: ['player'],
+            template: `
                     <div class="player">
                     <h3>
                         {{ player.UserName }}
                     </h3>
                     <div class="player__info">
                     <div>
-                        WR #{{ player.Rank }} ({{ player.ELO }} ELO)
+                        WR#{{ player.Rank }} {{ player.ELO }}ELO
                     </div>
                     <div> 
                     </div>
                     </div>
                     </div>
                 `
-            });
+        });
 
-            app.mount('#app')
-      </script>
+        app.mount('#app')
+    </script>
 </body>
+
 </html>
