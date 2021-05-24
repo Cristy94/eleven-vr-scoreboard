@@ -26,7 +26,7 @@ You can overlay the scoreboard over your stream, it will always show the score o
 
 ## How it works
 
-* The ElevenVR API is used to get the latest 10 matches of the given userID.
+* The [ElevenVR API](https://www.elevenvr.club/accounts/60531/matches) is used to get the latest 10 matches of the given userID.
 * The rounds/scores of the last match are currently shown.
 * The scoreboard is refreshed every 3 seconds.
 * If two players played multiple consecutive games as their latest games, the matches score between the two players is also displayed.
