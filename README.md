@@ -1,10 +1,9 @@
 # ElevenVR Live Scoreboard
 Live scoreboard for the [ElevenVR](https://www.elevenvr.net/) Table Tennis game, useful for streamers.
 
-![image](https://user-images.githubusercontent.com/1384885/117728875-531ff900-b1ea-11eb-99ce-4bf4f6f7642b.png)
+![image](https://user-images.githubusercontent.com/1384885/119359058-80b87800-bca9-11eb-8570-310fb80159f7.png)
 
-
-[![image](https://user-images.githubusercontent.com/1384885/117722672-a5a8e780-b1e1-11eb-9975-9155c081cb4d.png)](https://cristy94.github.io/eleven-vr-scoreboard/)
+![image](https://user-images.githubusercontent.com/1384885/119359118-92018480-bca9-11eb-9816-91d427e38566.png)
 
 # How to use
 
@@ -23,6 +22,14 @@ You can overlay the scoreboard over your stream, it will always show the score o
 ![image](https://user-images.githubusercontent.com/1384885/117724984-cd4d7f00-b1e4-11eb-9d2f-63a90de5a0bc.png)  
 3. Resize and crop the browser area (you can crop by dragging resize handles while holding ALT).
 
+
+
+## How it works
+
+* The ElevenVR API is used to get the latest 10 matches of the given userID.
+* The rounds/scores of the last match are currently shown.
+* The scoreboard is refreshed every 3 seconds.
+* If two players played multiple consecutive games as their latest games, the matches score between the two players is also displayed.
 
 ## Planned features
 
