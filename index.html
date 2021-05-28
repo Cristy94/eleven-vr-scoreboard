@@ -201,6 +201,8 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const userID = urlParams.get(USERID_QUERY_PARAM);
+        const homeWinsOffset = urlParams.get('home-offset') || 0;
+        const awayWinOffset = urlParams.get('away-offset') || 0;
 
         const App = {
             data() {
@@ -230,8 +232,8 @@
 
                             // Count matches score for those opponents
                             let otherIDPrevious = -1;
-                            this.matchesWon = 0;
-                            this.matchesLost = 0;
+                            this.matchesWon = homeWinsOffset;
+                            this.matchesLost = awayWinOffset;
                             try {
                                 for (const match of data.data) {
                                     const user1 = match.attributes['home-user-id'];
