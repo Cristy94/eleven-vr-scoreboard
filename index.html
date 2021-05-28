@@ -15,8 +15,9 @@
 
     <style>
         :root {
-            --block-bg: rgba(18, 18, 18, 0.9);
+            --block-bg: rgba(18, 18, 18, 0.85);
             --score-vert-padding: 0.1rem;
+            --color1: #ff5454;
         }
 
         body {
@@ -30,6 +31,9 @@
             background: var(--block-bg);
             color: white;
             margin-bottom: 1rem;
+            width: fit-content;
+            border-radius: 8px;
+            margin-left: 1rem;
         }
 
         .player-row {
@@ -70,6 +74,7 @@
             width: 3rem;
             text-align: center;
             font-weight: 100;
+            transition: all 0.2s ease-out;
         }
 
         .score--matches {
@@ -87,14 +92,26 @@
             right: 0;
             top: -15%;
             height: 130%;
-            width: 1px;
-            background: rgb(255, 255, 255);
+            width: 2px;
+            background: #767676;
         }
 
         .score:last-child {
+            padding-right: 0;
+        }
+
+        .score.running {
             border-right: none;
-            color: #ff5454;
+            color: var(--color1);
             font-weight: bold;
+        }
+
+        .score.ended.win {
+            font-weight: bold;
+        }
+
+        .match.match--ended .score.win {
+            color: var(--color1);
         }
 
         .player-row:first-child .score {
@@ -141,14 +158,16 @@
             <input name="userID" type="text" v-model="userID" @change="userChanged" />
         </div>
         <div id='matches'>
-            <div v-for="match in matches" :key="match.id" class="match">
+            <div v-for="match in matches" :key="match.id" class="match"
+                :class="match.attributes.state == 1 ? 'match--ended' : 'match--running'">
                 <div class="player-row">
                     <Player :player="match.attributes['home-team'][0]">
                     </Player>
-                    <div v-if="matchesWon + matchesLost > 0" class="score score--matches">
+                    <div class="score score--matches">
                         {{match.attributes['home-team'][0].id == userID ? matchesWon : matchesLost}}
                     </div>
-                    <div v-for="score in match.scores" class="score">
+                    <div v-for="score in match.scores" class="score"
+                        :class="[isMatchOver(score) ? 'ended': 'running', score['home-score'] > score['away-score'] ? 'win' :'lose']">
                         {{score['home-score']}}
                     </div>
                 </div>
@@ -156,10 +175,11 @@
                 <div class="player-row">
                     <Player :player="match.attributes['away-team'][0]">
                     </Player>
-                    <div v-if="matchesWon + matchesLost > 0" class="score score--matches">
+                    <div class="score score--matches">
                         {{match.attributes['away-team'][0].id == userID ? matchesWon : matchesLost}}
                     </div>
-                    <div v-for="score in match.scores" class="score">
+                    <div v-for="score in match.scores" class="score"
+                        :class="[isMatchOver(score) ? 'ended': 'running', score['home-score'] > score['away-score'] ? 'lose' :'win']">
                         {{score['away-score']}}
                     </div>
                 </div>
@@ -194,6 +214,9 @@
             },
 
             methods: {
+                isMatchOver(score) {
+                    return (score['home-score'] >= 11 || score['away-score'] >= 11) && Math.abs(score['home-score'] - score['away-score']) > 1;
+                },
                 userChanged() {
                     urlParams.set(USERID_QUERY_PARAM, this.userID);
                     history.pushState(null, null, "?" + urlParams.toString());
@@ -211,16 +234,16 @@
                             this.matchesLost = 0;
                             try {
                                 for (const match of data.data) {
-                                    if (match.attributes.state !== 1) continue;
                                     const user1 = match.attributes['home-user-id'];
                                     const user2 = match.attributes['away-user-id'];
 
                                     const otherID = user1 == this.userID ? user2 : user1;
-                                    if (otherIDPrevious !== -1 && otherIDPrevious !== otherID) {
-                                        break;
+                                    if (otherIDPrevious === -1) {
+                                        otherIDPrevious = otherID
                                     }
 
-                                    otherIDPrevious = otherID;
+                                    if (otherIDPrevious !== otherID) break; // End counting if no more games between those two
+                                    if (match.attributes.state !== 1) continue; // Don't count matches that are not over
 
                                     if (user1 == this.userID && match.attributes.winner === 0 || (user2 == this.userID && match.attributes.winner === 1)) {
                                         this.matchesWon++;
@@ -228,6 +251,7 @@
                                         this.matchesLost++;
                                     }
                                 }
+
                             } catch (e) {
 
                             }
@@ -266,7 +290,7 @@
                     </h3>
                     <div class="player__info">
                     <div>
-                        WR#{{ player.Rank }} {{ player.ELO }}ELO
+                        WR#{{ player.Rank }} {{ Math.round(player.ELO) }}ELO
                     </div>
                     <div> 
                     </div>
