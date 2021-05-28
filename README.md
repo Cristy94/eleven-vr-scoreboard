@@ -36,3 +36,6 @@ You can overlay the scoreboard over your stream, it will always show the score o
 1. Manually set a delay score update (if video stream is delayed, to not spoil the result)
 2. Directly search for the username/userID in the scoreboare
 3. Improved design and different themes.
+
+
+Keywords: Eleven Table Tennis, OBS Stream Overlay, Twitch Overlay, Live Scoreboard, ElevenVR Scoreboard Overlay, ElevenVR show scores, Eleven Oculus Stream video overlay
