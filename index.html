@@ -256,8 +256,6 @@
 
                             }
 
-                            console.log(this.matchesWon, this.matchesLost);
-
                             const newMatches = data.data.slice(0, LAST_MATCHES_SHOWN_COUNT);
                             this.matches = newMatches.map((m) => {
                                 const scores = m.relationships.rounds.data.map((r) => {
