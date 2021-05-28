@@ -31,11 +31,22 @@ You can overlay the scoreboard over your stream, it will always show the score o
 * The scoreboard is refreshed every 3 seconds.
 * If two players played multiple consecutive games as their latest games, the matches score between the two players is also displayed.
 
+## Changelog
+
+```
+28 May 2021
+* Fixed match score count during the first game
+* Shown ELO score is now rounded
+* Scoreboard has rounded corners and expands to fit the number of sets
+* Different style when a set is undergoing (red letters) vs when it's over (white letters)
+* Different style when a match is over (winner score of each set is highlighted)
+* Slightly decreased scoreboard background opacity
+```
+
 ## Planned features
 
-1. Manually set a delay score update (if video stream is delayed, to not spoil the result)
-2. Directly search for the username/userID in the scoreboare
-3. Improved design and different themes.
+1. Directly search for the username/userID in the scoreboare
+2. Improved design and different themes.
 
 
 Keywords: Eleven Table Tennis, OBS Stream Overlay, Twitch Overlay, Live Scoreboard, ElevenVR Scoreboard Overlay, ElevenVR show scores, Eleven Oculus Stream video overlay
