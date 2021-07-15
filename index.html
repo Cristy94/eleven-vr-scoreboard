@@ -64,7 +64,7 @@
         .player__info {
             font-size: 1rem;
             text-align: center;
-            color: #aaa;
+            color: #353535;
         }
 
         .score {
@@ -161,7 +161,7 @@
             <div v-for="match in matches" :key="match.id" class="match"
                 :class="match.attributes.state == 1 ? 'match--ended' : 'match--running'">
                 <div class="player-row">
-                    <Player :player="match.attributes['home-team'][0]">
+                    <Player :player="match.attributes['home-team'][0]" style="background-color:#2187E6">
                     </Player>
                     <div class="score score--matches">
                         {{match.attributes['home-team'][0].id == userID ? matchesWon : matchesLost}}
@@ -173,7 +173,7 @@
                 </div>
 
                 <div class="player-row">
-                    <Player :player="match.attributes['away-team'][0]">
+                    <Player :player="match.attributes['away-team'][0]" style="background-color:#F1382A">
                     </Player>
                     <div class="score score--matches">
                         {{match.attributes['away-team'][0].id == userID ? matchesWon : matchesLost}}
