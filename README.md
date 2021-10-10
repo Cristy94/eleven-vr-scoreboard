@@ -9,7 +9,8 @@ Live scoreboard for the [ElevenVR](https://www.elevenvr.net/) Table Tennis game,
 
 1. Open this page: **https://cristy94.github.io/eleven-vr-scoreboard/**
 2. Enter the userID (can be found by clicking on the UserID label, searching for the username and copying the ID shown in the URL)
-3. The latest match of that user is displayed and the score is refreshed every 3 seconds.
+3. If the camera is set up in a way that the mentioned user is to be shown in the bottom half of the screen, check "Show user below"
+4. The latest match of that user is displayed and the score is refreshed every 3 seconds.
 
 ## Usage with OBS
 

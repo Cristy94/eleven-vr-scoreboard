@@ -25,6 +25,9 @@
             line-height: 1;
         }
 
+        input {
+            margin-right: 15px;
+        }
 
         .match {
             padding: 1rem 2rem;
@@ -156,11 +159,13 @@
         <div id="settings">
             <label for="userID"><a href="https://www.elevenvr.net/search" target="_blank">User ID</a></label>
             <input name="userID" type="text" v-model="userID" @change="userChanged" />
+            <label for="showUserBelow">Show user below</a>
+            <input name="showUserBelow" type="checkbox" v-model="showUserBelow" @change="userChanged" id="swapRows" onClick="swapRows()" />
         </div>
         <div id='matches'>
             <div v-for="match in matches" :key="match.id" class="match"
                 :class="match.attributes.state == 1 ? 'match--ended' : 'match--running'">
-                <div class="player-row">
+                <div class="player-row" id="user">
                     <Player :player="match.attributes['home-team'][0]">
                     </Player>
                     <div class="score score--matches">
@@ -172,7 +177,7 @@
                     </div>
                 </div>
 
-                <div class="player-row">
+                <div class="player-row" id="otherplayer">
                     <Player :player="match.attributes['away-team'][0]">
                     </Player>
                     <div class="score score--matches">
@@ -196,13 +201,33 @@
         const UPDATE_INTERVAL_MS = 3000;
         const LAST_MATCHES_SHOWN_COUNT = 1;
         const USERID_QUERY_PARAM = 'user';
+        const SHOW_USER_BELOW_PARAM = 'showUserBelow';
 
         let updateHandle = 0;
 
         const urlParams = new URLSearchParams(window.location.search);
         const userID = urlParams.get(USERID_QUERY_PARAM);
+        const showUserBelow = urlParams.get(SHOW_USER_BELOW_PARAM);
         const homeWinsOffset = urlParams.get('home-offset') || 0;
         const awayWinOffset = urlParams.get('away-offset') || 0;
+
+        function swapRows() {
+            let userDiv = document.getElementById("user");
+            if ( userDiv !== null ) {
+                let otherPlayerDiv = document.getElementById("otherplayer");
+                let parentDiv = userDiv.parentElement;
+                if ( document.getElementById('swapRows').checked ) {
+                    if ( userDiv.previousSibling === null ) {
+                        parentDiv.insertBefore(otherPlayerDiv, userDiv);
+                    }
+                }
+                else{
+                    if (otherPlayerDiv.previousSibling === null) {
+                        parentDiv.insertBefore(userDiv, otherPlayerDiv);
+                    }
+                }
+            }
+        }
 
         const App = {
             data() {
@@ -212,6 +237,7 @@
                     matches: [],
                     matchesWon: 0,
                     matchesLost: 0,
+                    showUserBelow: showUserBelow || false,
                 }
             },
 
@@ -221,10 +247,13 @@
                 },
                 userChanged() {
                     urlParams.set(USERID_QUERY_PARAM, this.userID);
+                    urlParams.set(SHOW_USER_BELOW_PARAM, this.showUserBelow);
                     history.pushState(null, null, "?" + urlParams.toString());
                     this.updateMatches();
                 },
                 updateMatches() {
+                    swapRows();
+
                     clearTimeout(updateHandle);
                     fetch(`https://www.elevenvr.club/accounts/${this.userID}/matches`)
                         .then(res => res.json())
