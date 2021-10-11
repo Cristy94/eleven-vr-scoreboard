@@ -13,7 +13,7 @@
 
     <!-- Vue Dev version -->
     <!-- <script src="https://unpkg.com/vue@3.2.20/dist/vue.global.js" crossorigin="anonymous"></script> -->
-    
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
         href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,600;1,700&display=swap"
@@ -217,7 +217,7 @@
                     matches: [],
                     homeMatchesWon: 0,
                     awayMatchesWon: 0,
-                    rowsReversed: rowsReversed ? true : false,
+                    rowsReversed: !!rowsReversed && rowsReversed !== '0' && rowsReversed !== 'false' ? true : false,
                     teams: [TEAM_NAME_1, TEAM_NAME_2],
                 }
             },
