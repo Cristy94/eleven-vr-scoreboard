@@ -44,6 +44,7 @@ If the matches score is wrong you can offset it using query params `home-offset`
 11 October 2021
 * Add checkbox option to flip player rows (thanks to @jerryfromearth [SolidSlime] for the suggestion)
 * Refactor the code a bit to remove duplication of player rows
+* Update Vue.js@3.2.20
 
 28 May 2021
 * Fixed match score count during the first game
