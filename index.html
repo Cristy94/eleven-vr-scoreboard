@@ -4,10 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/vue@3.0.11/dist/vue.global.prod.js"
-        integrity="sha384-RoYKiz86LLByaDkyg6pnB/EPSDmSxj0r+RP4zHQiGWlv7EdJMl4iiHNhMyBWiBqb"
-        crossorigin="anonymous"></script>
     <title>ElevenVR Scoreboard</title>
+
+
+    <script src="https://unpkg.com/vue@3.2.20/dist/vue.global.prod.js"
+        integrity="sha384-lxNKA8ytxVUPUUbd/unq0UJKQTCth0AEJMOvyFV0Y5EjScceSsAXF/aJjASsx82/"
+        crossorigin="anonymous"></script>
+
+    <!-- Vue Dev version -->
+    <!-- <script src="https://unpkg.com/vue@3.2.20/dist/vue.global.js" crossorigin="anonymous"></script> -->
+    
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
         href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,600;1,700&display=swap"
@@ -34,7 +40,14 @@
             width: fit-content;
             border-radius: 8px;
             margin-left: 1rem;
+            display: flex;
+            flex-direction: column;
         }
+
+        .player-row:first-child .player {
+            flex-direction: column;
+        }
+
 
         .player-row {
             display: flex;
@@ -135,10 +148,16 @@
         input {
             padding: 0.5rem;
             border-radius: 5px;
+            margin-right: 1rem;
         }
 
         label+input {
             margin-left: 0.5rem;
+        }
+
+        label,
+        input[type=checkbox] {
+            cursor: pointer;
         }
 
         #credits {
@@ -155,35 +174,16 @@
     <div id="app">
         <div id="settings">
             <label for="userID"><a href="https://www.elevenvr.net/search" target="_blank">User ID</a></label>
-            <input name="userID" type="text" v-model="userID" @change="userChanged" />
+            <input name="userID" id="userID" type="text" v-model="userID" />
+
+            <label for="rowsReversed">Flip players</a>
+                <input name="rowsReversed" id="rowsReversed" type="checkbox" v-model="rowsReversed" />
         </div>
         <div id='matches'>
             <div v-for="match in matches" :key="match.id" class="match"
                 :class="match.attributes.state == 1 ? 'match--ended' : 'match--running'">
-                <div class="player-row">
-                    <Player :player="match.attributes['home-team'][0]">
-                    </Player>
-                    <div class="score score--matches">
-                        {{match.attributes['home-team'][0].id == userID ? matchesWon : matchesLost}}
-                    </div>
-                    <div v-for="score in match.scores" class="score"
-                        :class="[isMatchOver(score) ? 'ended': 'running', score['home-score'] > score['away-score'] ? 'win' :'lose']">
-                        {{score['home-score']}}
-                    </div>
-                </div>
-
-                <div class="player-row">
-                    <Player :player="match.attributes['away-team'][0]">
-                    </Player>
-                    <div class="score score--matches">
-                        {{match.attributes['away-team'][0].id == userID ? matchesWon : matchesLost}}
-                    </div>
-                    <div v-for="score in match.scores" class="score"
-                        :class="[isMatchOver(score) ? 'ended': 'running', score['home-score'] > score['away-score'] ? 'lose' :'win']">
-                        {{score['away-score']}}
-                    </div>
-                </div>
-
+                <player-row v-for="teamName in (rowsReversed? teamsReversed: teams)" :match="match"
+                    :team-name="teamName" :matches-won="this[teamName + 'MatchesWon']" />
             </div>
         </div>
 
@@ -195,12 +195,17 @@
     <script>
         const UPDATE_INTERVAL_MS = 3000;
         const LAST_MATCHES_SHOWN_COUNT = 1;
-        const USERID_QUERY_PARAM = 'user';
+        const QUERY_PARAM_USERID = 'user';
+        const QUERY_PARAM_ROWS_REVERSED = 'rowsReversed';
+
+        const TEAM_NAME_1 = 'home';
+        const TEAM_NAME_2 = 'away';
 
         let updateHandle = 0;
 
         const urlParams = new URLSearchParams(window.location.search);
-        const userID = urlParams.get(USERID_QUERY_PARAM);
+        const userID = urlParams.get(QUERY_PARAM_USERID);
+        const rowsReversed = urlParams.get(QUERY_PARAM_ROWS_REVERSED);
         const homeWinsOffset = urlParams.get('home-offset') || 0;
         const awayWinOffset = urlParams.get('away-offset') || 0;
 
@@ -210,19 +215,36 @@
                     counter: 0,
                     userID: userID || '60531',
                     matches: [],
-                    matchesWon: 0,
-                    matchesLost: 0,
+                    homeMatchesWon: 0,
+                    awayMatchesWon: 0,
+                    rowsReversed: rowsReversed ? true : false,
+                    teams: [TEAM_NAME_1, TEAM_NAME_2],
                 }
             },
-
-            methods: {
-                isMatchOver(score) {
-                    return (score['home-score'] >= 11 || score['away-score'] >= 11) && Math.abs(score['home-score'] - score['away-score']) > 1;
+            computed: {
+                teamsReversed() {
+                    return this.teams.slice().reverse();
+                }
+            },
+            watch: {
+                rowsReversed: function (val) {
+                    if (val) {
+                        urlParams.set(QUERY_PARAM_ROWS_REVERSED, 1);
+                    } else {
+                        urlParams.delete(QUERY_PARAM_ROWS_REVERSED)
+                    }
+                    this.updateUrlParams();
                 },
-                userChanged() {
-                    urlParams.set(USERID_QUERY_PARAM, this.userID);
-                    history.pushState(null, null, "?" + urlParams.toString());
+
+                userID: function (val) {
+                    urlParams.set(QUERY_PARAM_USERID, val);
+                    this.updateUrlParams();
                     this.updateMatches();
+                }
+            },
+            methods: {
+                updateUrlParams() {
+                    history.pushState(null, null, "?" + urlParams.toString());
                 },
                 updateMatches() {
                     clearTimeout(updateHandle);
@@ -232,8 +254,8 @@
 
                             // Count matches score for those opponents
                             let otherIDPrevious = -1;
-                            this.matchesWon = homeWinsOffset;
-                            this.matchesLost = awayWinOffset;
+                            this.homeMatchesWon = homeWinsOffset;
+                            this.awayMatchesWon = awayWinOffset;
                             try {
                                 for (const match of data.data) {
                                     const user1 = match.attributes['home-user-id'];
@@ -247,10 +269,10 @@
                                     if (otherIDPrevious !== otherID) break; // End counting if no more games between those two
                                     if (match.attributes.state !== 1) continue; // Don't count matches that are not over
 
-                                    if (user1 == this.userID && match.attributes.winner === 0 || (user2 == this.userID && match.attributes.winner === 1)) {
-                                        this.matchesWon++;
+                                    if (match.attributes.winner === 0) {
+                                        this.homeMatchesWon++;
                                     } else {
-                                        this.matchesLost++;
+                                        this.awayMatchesWon++;
                                     }
                                 }
 
@@ -281,22 +303,48 @@
 
         var app = Vue.createApp(App);
 
-        app.component('Player', {
+        app.component('player', {
             props: ['player'],
             template: `
                     <div class="player">
-                    <h3>
-                        {{ player.UserName }}
-                    </h3>
-                    <div class="player__info">
-                    <div>
-                        WR#{{ player.Rank }} {{ Math.round(player.ELO) }}ELO
-                    </div>
-                    <div> 
-                    </div>
-                    </div>
+                        <h3>
+                            {{ player.UserName }}
+                        </h3>
+                        <div class="player__info">
+                            <div>
+                                WR#{{ player.Rank }} {{ Math.round(player.ELO) }}ELO
+                            </div>
+                        </div>
                     </div>
                 `
+        });
+
+        app.component('player-row', {
+            props: ['match', 'teamName', 'matchesWon'],
+            methods: {
+                isMatchOver(score) {
+                    return (score['home-score'] >= 11 || score['away-score'] >= 11) && Math.abs(score['home-score'] - score['away-score']) > 1;
+                },
+            },
+            computed: {
+                otherTeamName: function () {
+                    return this.teamName === TEAM_NAME_1 ? TEAM_NAME_2 : TEAM_NAME_1;
+                }
+            },
+            template: `
+                <div class="player-row">
+                    <player :player="match.attributes[teamName + '-team'][0]">
+                    </player>
+
+                    <div class="score score--matches">
+                        {{matchesWon}}
+                    </div>
+                    <div v-for="score in match.scores" class="score"
+                        :class="[isMatchOver(score) ? 'ended': 'running', score[teamName + '-score'] > score[otherTeamName + '-score'] ? 'win' :'lose']">
+                        {{score[teamName + '-score']}}
+                    </div>
+                </div>
+            `
         });
 
         app.mount('#app')
