@@ -11,7 +11,6 @@ Live scoreboard for the [ElevenVR](https://www.elevenvr.net/) Table Tennis game,
 2. Enter the userID (can be found by clicking on the UserID label, searching for the username and copying the ID shown in the URL)
 3. The latest match of that user is displayed and the score is refreshed every 3 seconds.
 
-
 ## Usage with OBS
 
 You can overlay the scoreboard over your stream, it will always show the score of the current match that you are playing.
@@ -22,6 +21,14 @@ You can overlay the scoreboard over your stream, it will always show the score o
 ![image](https://user-images.githubusercontent.com/1384885/117724984-cd4d7f00-b1e4-11eb-9d2f-63a90de5a0bc.png)  
 3. Resize and crop the browser area (you can crop by dragging resize handles while holding ALT).
 
+
+## Extra features
+
+### Fixing matches score
+
+If the matches score is wrong you can offset it using query params `home-offset` and `away-offset`, like this: 
+
+?user=1234&**home-offset=1&away-offset=-2**
 
 
 ## How it works
