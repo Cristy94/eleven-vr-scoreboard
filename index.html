@@ -179,9 +179,9 @@
             <input name="rowsReversed" id="rowsReversed" type="checkbox" v-model="rowsReversed" />
 
             <select id="bestOf" v-model="bestOf">
-                <option value="">--hide bestof--</option>
+                <option value="" selected>--hide bestof--</option>
                 <option value="bo3">BO3</option>
-                <option value="bo5" selected>BO5</option>
+                <option value="bo5">BO5</option>
                 <option value="bo7">BO7</option>
             </select>
         </div>
@@ -230,7 +230,7 @@
                     awayMatchesWon: 0,
                     rowsReversed: !!rowsReversed && rowsReversed !== '0' && rowsReversed !== 'false' ? true : false,
                     teams: [TEAM_NAME_1, TEAM_NAME_2],
-                    bestOf: bestOf || 'bo5',
+                    bestOf: bestOf || '',
                 }
             },
             computed: {
