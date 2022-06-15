@@ -243,7 +243,7 @@
                     if (val) {
                         urlParams.set(QUERY_PARAM_ROWS_REVERSED, 1);
                     } else {
-                        urlParams.delete(QUERY_PARAM_ROWS_REVERSED)
+                        urlParams.delete(QUERY_PARAM_ROWS_REVERSED);
                     }
                     this.updateUrlParams();
                 },
@@ -255,7 +255,11 @@
                 },
 
                 bestOf: function (val) {
-                    urlParams.set(QUERY_PARAM_BESTOF, val);
+                    if (val) {
+                        urlParams.set(QUERY_PARAM_BESTOF, val);
+                    } else {
+                        urlParams.delete(QUERY_PARAM_BESTOF);
+                    }
                     this.updateUrlParams();
                 }
             },
