@@ -66,7 +66,7 @@
             font-size: 1.4rem;
         }
 
-        .player__info {
+        .player__info, .bestOf {
             font-size: 1rem;
             text-align: center;
             color: #aaa;
@@ -159,6 +159,13 @@
             margin-right: 1rem;
             float: right;
         }
+
+        .bestOf {
+            text-transform: uppercase;
+            position: absolute;
+            left: 16.1em;
+            margin-top: -1.12rem;
+        }
     </style>
 </head>
 
@@ -168,14 +175,23 @@
             <label for="userID"><a href="https://www.elevenvr.net/search" target="_blank">User ID</a></label>
             <input name="userID" id="userID" type="text" v-model="userID" />
 
-            <label for="rowsReversed">Flip players</a>
-                <input name="rowsReversed" id="rowsReversed" type="checkbox" v-model="rowsReversed" />
+            <label for="rowsReversed">Flip players</label>
+            <input name="rowsReversed" id="rowsReversed" type="checkbox" v-model="rowsReversed" />
+
+            <select id="bestOf" v-model="bestOf">
+                <option value="bo3">BO3</option>
+                <option value="bo5" selected>BO5</option>
+                <option value="bo7">BO7</option>
+            </select>
         </div>
         <div id='matches'>
             <div v-for="match in matches" :key="match.id" class="match"
                 :class="match.attributes.state == 1 ? 'match--ended' : 'match--running'">
-                <player-row v-for="teamName in (rowsReversed? teamsReversed: teams)" :match="match"
-                    :team-name="teamName" :matches-won="this[teamName + 'MatchesWon']" />
+                <div class="players">
+                    <player-row v-for="teamName in (rowsReversed? teamsReversed: teams)" :match="match"
+                        :team-name="teamName" :matches-won="this[teamName + 'MatchesWon']" />
+                </div>
+                <span class="bestOf">{{bestOf}}</span>
             </div>
         </div>
 
@@ -189,6 +205,7 @@
         const LAST_MATCHES_SHOWN_COUNT = 1;
         const QUERY_PARAM_USERID = 'user';
         const QUERY_PARAM_ROWS_REVERSED = 'rowsReversed';
+        const QUERY_PARAM_BESTOF = 'bestOf';
 
         const TEAM_NAME_1 = 'home';
         const TEAM_NAME_2 = 'away';
@@ -198,6 +215,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const userID = urlParams.get(QUERY_PARAM_USERID);
         const rowsReversed = urlParams.get(QUERY_PARAM_ROWS_REVERSED);
+        const bestOf = urlParams.get(QUERY_PARAM_BESTOF);
         const homeWinsOffset = urlParams.get('home-offset') || 0;
         const awayWinOffset = urlParams.get('away-offset') || 0;
 
@@ -211,6 +229,7 @@
                     awayMatchesWon: 0,
                     rowsReversed: !!rowsReversed && rowsReversed !== '0' && rowsReversed !== 'false' ? true : false,
                     teams: [TEAM_NAME_1, TEAM_NAME_2],
+                    bestOf: bestOf || 'bo5',
                 }
             },
             computed: {
@@ -232,6 +251,11 @@
                     urlParams.set(QUERY_PARAM_USERID, val);
                     this.updateUrlParams();
                     this.updateMatches();
+                },
+
+                bestOf: function (val) {
+                    urlParams.set(QUERY_PARAM_BESTOF, val);
+                    this.updateUrlParams();
                 }
             },
             methods: {
