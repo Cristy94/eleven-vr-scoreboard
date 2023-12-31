@@ -41,6 +41,10 @@ If the matches score is wrong you can offset it using query params `home-offset`
 ## Changelog
 
 ```
+31 December 2023
+* Added the option to show flags for each player.
+* Design improvements.
+
 11 October 2021
 * Add checkbox option to flip player rows (thanks to @jerryfromearth [SolidSlime] for the suggestion)
 * Refactor the code a bit to remove duplication of player rows
