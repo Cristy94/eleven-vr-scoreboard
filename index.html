@@ -33,13 +33,14 @@
         }
 
         .match {
-            padding: 1rem 2rem;
+            padding: 1rem 0;
             background: var(--block-bg);
             color: white;
             margin-bottom: 1rem;
             width: fit-content;
             border-radius: 8px;
             margin-left: 1rem;
+            position: relative;
         }
 
         .player-row {
@@ -58,8 +59,9 @@
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
-            width: 12em;
+            width: 13rem;
             overflow: hidden;
+            padding: 0 2rem;
         }
 
         .player .flag {
@@ -95,25 +97,30 @@
 
         .score--matches {
             padding-left: 0;
-            padding-right: 1rem;
             font-weight: bold;
             color: #bdff1f;
             position: relative;
-            margin-right: 1rem;
         }
 
-        .score--matches:after {
-            content: ' ';
+        .match:before {
+            content: '';
+            width: 100%;
+            height: 100%;
             position: absolute;
-            right: 0;
-            top: -15%;
-            height: 130%;
-            width: 2px;
-            background: #767676;
+            top: 0;
+            left: 0;
+            background: radial-gradient(ellipse at center,  rgba(255,255,255,1) 0%,rgba(14,14,14,0) 70%);
+            opacity: 0.1;
         }
-
-        .score:last-child {
-            padding-right: 0;
+        /* White bar behind matches */
+        .player:before {
+            content: '';
+            height: 100%;
+            width: 3.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            position: absolute;
+            left: 16.8rem;
+            top: 0;
         }
 
         .score.running {
@@ -128,6 +135,10 @@
 
         .match.match--ended .score.win {
             color: var(--color1);
+        }
+
+        .player-row:first-child {
+            border-bottom: 2px solid rgba(0,0,0,0.3);
         }
 
         .player-row:first-child .score {
@@ -174,8 +185,8 @@
         .bestOf {
             text-transform: uppercase;
             position: absolute;
-            left: 16.1em;
-            margin-top: -1.12rem;
+            left: 17.6em;
+            margin-top: -0.98rem;
         }
     </style>
 </head>
