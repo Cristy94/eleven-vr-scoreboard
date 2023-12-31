@@ -10,6 +10,7 @@
     <script src="https://unpkg.com/vue@3.2.20/dist/vue.global.prod.js"
         integrity="sha384-lxNKA8ytxVUPUUbd/unq0UJKQTCth0AEJMOvyFV0Y5EjScceSsAXF/aJjASsx82/"
         crossorigin="anonymous"></script>
+    <script src="./countries.js"></script>
 
     <!-- Vue Dev version -->
     <!-- <script src="https://unpkg.com/vue@3.2.20/dist/vue.global.js" crossorigin="anonymous"></script> -->
@@ -60,13 +61,22 @@
             width: 12em;
         }
 
+        .player .flag {
+            height: 2rem;
+            margin-right: 5px;
+            border-radius: 5px;
+        }
+
         .player h3 {
             margin: 0.5rem 0;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 1.4rem;
+            display: flex;
+            align-items: center;
         }
 
-        .player__info, .bestOf {
+        .player__info,
+        .bestOf {
             font-size: 1rem;
             text-align: center;
             color: #aaa;
@@ -184,13 +194,22 @@
                 <option value="bo5">BO5</option>
                 <option value="bo7">BO7</option>
             </select>
+
+            <select id="flag_1" v-model="flag_1">
+                <option value="" selected>--hide flag HOME--</option>
+                <option v-for="(country, countryCode) in countries" :key="countryCode">{{countryCode}}</option>
+            </select>
+            <select id="flag_2" v-model="flag_2">
+                <option value="" selected>--hide flag AWAY--</option>
+                <option v-for="(country, countryCode) in countries" :key="countryCode">{{countryCode}}</option>
+            </select>
         </div>
         <div id='matches'>
             <div v-for="match in matches" :key="match.id" class="match"
                 :class="match.attributes.state == 1 ? 'match--ended' : 'match--running'">
                 <div class="players">
                     <player-row v-for="teamName in (rowsReversed? teamsReversed: teams)" :match="match"
-                        :team-name="teamName" :matches-won="this[teamName + 'MatchesWon']" />
+                        :team-name="teamName" :matches-won="this[teamName + 'MatchesWon']" :flag="getFlag(teamName)" />
                 </div>
                 <span class="bestOf">{{bestOf}}</span>
             </div>
@@ -207,6 +226,8 @@
         const QUERY_PARAM_USERID = 'user';
         const QUERY_PARAM_ROWS_REVERSED = 'rowsReversed';
         const QUERY_PARAM_BESTOF = 'bestOf';
+        const QUERY_PARAM_COUNTRY_FLAG_1 = 'flag_1';
+        const QUERY_PARAM_COUNTRY_FLAG_2 = 'flag_2';
 
         const TEAM_NAME_1 = 'home';
         const TEAM_NAME_2 = 'away';
@@ -217,6 +238,8 @@
         const userID = urlParams.get(QUERY_PARAM_USERID);
         const rowsReversed = urlParams.get(QUERY_PARAM_ROWS_REVERSED);
         const bestOf = urlParams.get(QUERY_PARAM_BESTOF);
+        const flag_1 = urlParams.get(QUERY_PARAM_COUNTRY_FLAG_1);
+        const flag_2 = urlParams.get(QUERY_PARAM_COUNTRY_FLAG_2);
         const homeWinsOffset = urlParams.get('home-offset') || 0;
         const awayWinOffset = urlParams.get('away-offset') || 0;
 
@@ -231,6 +254,9 @@
                     rowsReversed: !!rowsReversed && rowsReversed !== '0' && rowsReversed !== 'false' ? true : false,
                     teams: [TEAM_NAME_1, TEAM_NAME_2],
                     bestOf: bestOf || '',
+                    countries: countries,
+                    flag_1: flag_1 || '',
+                    flag_2: flag_2 || '',
                 }
             },
             computed: {
@@ -261,11 +287,32 @@
                         urlParams.delete(QUERY_PARAM_BESTOF);
                     }
                     this.updateUrlParams();
+                },
+
+                flag_1: function (val) {
+                    if (val) {
+                        urlParams.set(QUERY_PARAM_COUNTRY_FLAG_1, val);
+                    } else {
+                        urlParams.delete(QUERY_PARAM_COUNTRY_FLAG_1);
+                    }
+                    this.updateUrlParams();
+                },
+
+                flag_2: function (val) {
+                    if (val) {
+                        urlParams.set(QUERY_PARAM_COUNTRY_FLAG_2, val);
+                    } else {
+                        urlParams.delete(QUERY_PARAM_COUNTRY_FLAG_2);
+                    }
+                    this.updateUrlParams();
                 }
             },
             methods: {
                 updateUrlParams() {
                     history.pushState(null, null, "?" + urlParams.toString());
+                },
+                getFlag(teamName) {
+                    return teamName === TEAM_NAME_1 ? this.flag_1 : this.flag_2;
                 },
                 updateMatches() {
                     clearTimeout(updateHandle);
@@ -329,7 +376,7 @@
             template: `
                     <div class="player">
                         <h3>
-                            {{ player.UserName }}
+                            <img v-if="player.flag" :src="'flags/'+player.flag + '.svg'" class="flag"/>{{ player.UserName }}
                         </h3>
                         <div class="player__info">
                             <div>
@@ -341,7 +388,7 @@
         });
 
         app.component('player-row', {
-            props: ['match', 'teamName', 'matchesWon'],
+            props: ['match', 'teamName', 'matchesWon', 'flag'],
             methods: {
                 isMatchOver(score) {
                     return (score['home-score'] >= 11 || score['away-score'] >= 11) && Math.abs(score['home-score'] - score['away-score']) > 1;
@@ -350,12 +397,17 @@
             computed: {
                 otherTeamName: function () {
                     return this.teamName === TEAM_NAME_1 ? TEAM_NAME_2 : TEAM_NAME_1;
+                },
+                playerData: function () {
+                    return {
+                        ...this.match.attributes[this.teamName + '-team'][0],
+                        flag: this.flag,
+                    }
                 }
             },
             template: `
                 <div class="player-row">
-                    <player :player="match.attributes[teamName + '-team'][0]">
-                    </player>
+                    <player :player="playerData" />
 
                     <div class="score score--matches">
                         {{matchesWon}}
