@@ -13,6 +13,10 @@ Live scoreboard for the [ElevenVR](https://www.elevenvr.net/) Table Tennis game,
 3. The latest match of that user is displayed and the score is refreshed every 3 seconds.
 4. [Optional] Change scoreboard settings, player flags, etc. Chosen settings are stored directly in the URL.
 
+> [!NOTE]  
+> In order to use API V2 (for features like automatic flag setting), you need an API key directly from the ElevenVR devs.  
+> Please reach out to ElevenVR for your API key.
+
 ## Usage with OBS
 
 You can overlay the scoreboard over your stream, it will always show the score of the current match that you are playing.
