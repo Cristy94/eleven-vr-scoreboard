@@ -45,6 +45,9 @@
                 <option value="" selected>--hide flag AWAY--</option>
                 <option v-for="(country, countryCode) in countries" :key="countryCode">{{countryCode}}</option>
             </select>
+
+            <label for="apiKey" title="If set, uses the new API">APIV2 KEY</label>
+            <input name="apiKey" id="apiKey" type="text" v-model="apiKey" />
         </div>
         <div id='matches'>
             <div v-for="match in matches" :key="match.id" class="match"
@@ -57,6 +60,9 @@
             </div>
         </div>
 
+        <br/>
+        <br/>
+        <div style="font-size: 12px;margin-left: 20px">Using API version: {{useAPIV2 ? 'V2' : 'V1 (enter API key to switch to API V2)'}}</div>
         <div id="credits">
             Scoreboard created by <a href="https://twitter.com/XCSme" target="_blank">XCS</a> 🏓
         </div>

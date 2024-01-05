@@ -1,6 +1,8 @@
 const UPDATE_INTERVAL_MS = 3000;
-const API_URL = 'https://www.elevenvr.club/';
+const API_URL = 'https://www.elevenvr.club';
+const API_URL_V2 = 'http://api2.elevenvr.com';
 const LAST_MATCHES_SHOWN_COUNT = 1;
+const QUERY_API_KEY = 'apiKey';
 const QUERY_PARAM_USERID = 'user';
 const QUERY_PARAM_ROWS_REVERSED = 'rowsReversed';
 const QUERY_PARAM_BESTOF = 'bestOf';
@@ -13,6 +15,7 @@ const TEAM_NAME_2 = 'away';
 let updateHandle = 0;
 
 const urlParams = new URLSearchParams(window.location.search);
+const apiKey = urlParams.get(QUERY_API_KEY);
 const userID = urlParams.get(QUERY_PARAM_USERID);
 const rowsReversed = urlParams.get(QUERY_PARAM_ROWS_REVERSED);
 const bestOf = urlParams.get(QUERY_PARAM_BESTOF);
@@ -25,6 +28,7 @@ const App = {
     data() {
         return {
             counter: 0,
+            apiKey: apiKey || '',
             userID: userID || '60531',
             matches: [],
             homeMatchesWon: 0,
@@ -38,6 +42,9 @@ const App = {
         }
     },
     computed: {
+        useAPIV2() {
+            return !!this.apiKey;
+        },
         teamsReversed() {
             return this.teams.slice().reverse();
         }
@@ -50,6 +57,12 @@ const App = {
                 urlParams.delete(QUERY_PARAM_ROWS_REVERSED);
             }
             this.updateUrlParams();
+        },
+
+        apiKey: function (val) {
+            urlParams.set(QUERY_API_KEY, val);
+            this.updateUrlParams();
+            this.updateMatches();
         },
 
         userID: function (val) {
@@ -86,6 +99,13 @@ const App = {
         }
     },
     methods: {
+        getAPIURL(path) {
+            if (this.useAPIV2) {
+                // TODO: Disable CORS proxy once API v2 allows CORS requests
+                return 'https://corsproxy.io/?' + encodeURIComponent(`${API_URL_V2}${path}?api-key=${this.apiKey}`);
+            }
+            return `${API_URL}${path}`;
+        },
         updateUrlParams() {
             history.pushState(null, null, "?" + urlParams.toString());
         },
@@ -94,7 +114,7 @@ const App = {
         },
         updateMatches() {
             clearTimeout(updateHandle);
-            fetch(`${API_URL}/accounts/${this.userID}/matches`)
+            fetch(this.getAPIURL(`/accounts/${this.userID}/matches`), { headers: { 'Content-Type': 'application/json' } })
                 .then(res => res.json())
                 .then(data => {
 
@@ -128,9 +148,14 @@ const App = {
 
                     const newMatches = data.data.slice(0, LAST_MATCHES_SHOWN_COUNT);
                     this.matches = newMatches.map((m) => {
-                        const scores = m.relationships.rounds.data.map((r) => {
+                        let scores = m.relationships.rounds.data.map((r) => {
                             return data.included.find((inclRound) => inclRound.id == r.id && inclRound.type === r.type).attributes;
-                        }).reverse();
+                        });
+
+                        if (!this.useAPIV2) {
+                            // Old API returns match scores reversed
+                            scores = scores.reverse();
+                        }
                         return {
                             ...m,
                             scores
