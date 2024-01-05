@@ -43,6 +43,10 @@ If the matches score is wrong you can offset it using query params `home-offset`
 ## Changelog
 
 ```
+6 January 2024
+* Added support for ElevenVR API V2 (NOTE!: Currently using a proxy, until API allows CORS requests)
+* Added option to automatically load player flags from their profile.
+
 31 December 2023
 * Added the option to show flags for each player.
 * Design improvements.
