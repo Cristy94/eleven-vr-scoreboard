@@ -136,7 +136,7 @@ const App = {
                 return;
             }
 
-            if (!this.autoFlags) {
+            if (!this.autoFlags || !this.apiKey) {
                 return;
             }
 
