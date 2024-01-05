@@ -10,6 +10,9 @@ const QUERY_PARAM_BESTOF = 'bestOf';
 const QUERY_PARAM_COUNTRY_FLAG_1 = 'flag_1';
 const QUERY_PARAM_COUNTRY_FLAG_2 = 'flag_2';
 
+const INTERNAL_ENABLE_ACCOUNTS_CACHE = true;
+const INTERNAL_ACCOUNTS_CACHE = {}; // Cache account data for user ID
+
 const TEAM_NAME_1 = 'home';
 const TEAM_NAME_2 = 'away';
 
@@ -140,16 +143,26 @@ const App = {
             const match = this.matches[0];
             const users = [match.attributes['home-user-id'], match.attributes['away-user-id']];
 
-            for (const [idx, userID] of users.entries()) {
-                fetch(this.getAPIURL(`/accounts/${userID}`))
-                    .then(res => res.json())
-                    .then(data => {
-                        const countryCode = data?.data?.attributes?.['country-code'];
+            const setFlagForAccount = (data, idx) => {
+                const countryCode = data?.data?.attributes?.['country-code'];
 
-                        if (countryCode) {
-                            this['flag_' + (idx + 1)] = countryCode.toLowerCase();
-                        }
-                    })
+                if (countryCode) {
+                    this['flag_' + (idx + 1)] = countryCode.toLowerCase();
+                }
+            }
+            for (const [idx, userID] of users.entries()) {
+
+                if (INTERNAL_ENABLE_ACCOUNTS_CACHE && INTERNAL_ACCOUNTS_CACHE[userID]) {
+                    setFlagForAccount(INTERNAL_ACCOUNTS_CACHE[userID], idx);
+                } else {
+                    fetch(this.getAPIURL(`/accounts/${userID}`))
+                        .then(res => res.json())
+                        .then(data => {
+                            INTERNAL_ACCOUNTS_CACHE[userID] = data;
+                            setFlagForAccount(data, idx);
+                        })
+                }
+
             }
         },
         updateMatches() {
