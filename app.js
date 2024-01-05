@@ -5,6 +5,7 @@ const LAST_MATCHES_SHOWN_COUNT = 1;
 const QUERY_API_KEY = 'apiKey';
 const QUERY_PARAM_USERID = 'user';
 const QUERY_PARAM_ROWS_REVERSED = 'rowsReversed';
+const QUERY_PARAM_AUTO_FLAGS = 'autoFlags';
 const QUERY_PARAM_BESTOF = 'bestOf';
 const QUERY_PARAM_COUNTRY_FLAG_1 = 'flag_1';
 const QUERY_PARAM_COUNTRY_FLAG_2 = 'flag_2';
@@ -21,9 +22,11 @@ const rowsReversed = urlParams.get(QUERY_PARAM_ROWS_REVERSED);
 const bestOf = urlParams.get(QUERY_PARAM_BESTOF);
 const flag_1 = urlParams.get(QUERY_PARAM_COUNTRY_FLAG_1);
 const flag_2 = urlParams.get(QUERY_PARAM_COUNTRY_FLAG_2);
+const autoFlags = urlParams.get(QUERY_PARAM_AUTO_FLAGS);
 const homeWinsOffset = urlParams.get('home-offset') || 0;
 const awayWinOffset = urlParams.get('away-offset') || 0;
 
+const getValAsBoolean = (val) => !!val && val !== '0' && val !== 'false' ? true : false
 const App = {
     data() {
         return {
@@ -33,12 +36,14 @@ const App = {
             matches: [],
             homeMatchesWon: 0,
             awayMatchesWon: 0,
-            rowsReversed: !!rowsReversed && rowsReversed !== '0' && rowsReversed !== 'false' ? true : false,
+            rowsReversed: getValAsBoolean(rowsReversed),
             teams: [TEAM_NAME_1, TEAM_NAME_2],
             bestOf: bestOf || '',
             countries: countries,
             flag_1: flag_1 || '',
             flag_2: flag_2 || '',
+            autoFlags: getValAsBoolean(autoFlags),
+
         }
     },
     computed: {
@@ -96,7 +101,17 @@ const App = {
                 urlParams.delete(QUERY_PARAM_COUNTRY_FLAG_2);
             }
             this.updateUrlParams();
-        }
+        },
+
+        autoFlags: function (val) {
+            if (val) {
+                urlParams.set(QUERY_PARAM_AUTO_FLAGS, 1);
+            } else {
+                urlParams.delete(QUERY_PARAM_AUTO_FLAGS);
+            }
+            this.updateUrlParams();
+            this.loadAccountsAndSetFlags();
+        },
     },
     methods: {
         getAPIURL(path) {
@@ -112,9 +127,34 @@ const App = {
         getFlag(teamName) {
             return teamName === TEAM_NAME_1 ? this.flag_1 : this.flag_2;
         },
+        loadAccountsAndSetFlags() {
+            if (!this.matches.length) {
+                console.error('No matches found');
+                return;
+            }
+
+            if (!this.autoFlags) {
+                return;
+            }
+
+            const match = this.matches[0];
+            const users = [match.attributes['home-user-id'], match.attributes['away-user-id']];
+
+            for (const [idx, userID] of users.entries()) {
+                fetch(this.getAPIURL(`/accounts/${userID}`))
+                    .then(res => res.json())
+                    .then(data => {
+                        const countryCode = data?.data?.attributes?.['country-code'];
+
+                        if (countryCode) {
+                            this['flag_' + (idx + 1)] = countryCode.toLowerCase();
+                        }
+                    })
+            }
+        },
         updateMatches() {
             clearTimeout(updateHandle);
-            fetch(this.getAPIURL(`/accounts/${this.userID}/matches`), { headers: { 'Content-Type': 'application/json' } })
+            fetch(this.getAPIURL(`/accounts/${this.userID}/matches`))
                 .then(res => res.json())
                 .then(data => {
 
@@ -161,6 +201,10 @@ const App = {
                             scores
                         }
                     })
+
+                    // TODO: We do this every tick, maybe we could cache account info
+                    // But what if account changes? How do we force refresh? Re-add OBS source?
+                    this.loadAccountsAndSetFlags();
                 });
 
             updateHandle = setTimeout(() => this.updateMatches(), UPDATE_INTERVAL_MS);

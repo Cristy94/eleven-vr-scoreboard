@@ -45,6 +45,8 @@
                 <option value="" selected>--hide flag AWAY--</option>
                 <option v-for="(country, countryCode) in countries" :key="countryCode">{{countryCode}}</option>
             </select>
+            <label for="autoFlags">Auto Flags (V2 only)</label>
+            <input name="autoFlags" id="autoFlags" type="checkbox" v-model="autoFlags" />
 
             <label for="apiKey" title="If set, uses the new API">APIV2 KEY</label>
             <input name="apiKey" id="apiKey" type="text" v-model="apiKey" />
