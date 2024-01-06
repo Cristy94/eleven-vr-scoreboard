@@ -1,16 +1,14 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-  <rect y="91.476" style="fill:#F0F0F0;" width="512" height="341.337"/>
-  <g>
-    <rect y="91.476" style="fill:#D80027;" width="512" height="31.031"/>
-    <rect y="153.539" style="fill:#D80027;" width="512" height="31.031"/>
-    <rect y="215.603" style="fill:#D80027;" width="512" height="31.031"/>
-    <rect y="277.666" style="fill:#D80027;" width="512" height="31.031"/>
-    <rect y="339.729" style="fill:#D80027;" width="512" height="31.031"/>
-    <rect y="401.793" style="fill:#D80027;" width="512" height="31.031"/>
+<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-lr" viewBox="0 0 640 480">
+  <defs>
+    <clipPath id="lr-a">
+      <path fill-opacity=".7" d="M0 0h682.7v512H0z"/>
+    </clipPath>
+  </defs>
+  <g fill-rule="evenodd" clip-path="url(#lr-a)" transform="scale(.9375)">
+    <path fill="#fff" d="M0 0h767.9v512H0z"/>
+    <path fill="#006" d="M0 0h232.7v232.8H0z"/>
+    <path fill="#c00" d="M0 464.9h767.9V512H0z"/>
+    <path fill="#c00" d="M0 465.4h767.9V512H0zm0-92.9h767.9v46.2H0zm0-93.2h766V326H0zM232.7 0h535.1v46.5H232.7zm0 186h535.1v46.8H232.7zm0-92.7h535.1v46.5H232.7z"/>
+    <path fill="#fff" d="m166.3 177.5-50.7-31-50.4 31.3 18.7-50.9-50.3-31.4 62.3-.4 19.3-50.7L135 95h62.3l-50.1 31.7z"/>
   </g>
-  <rect y="79.177" style="fill:#0052B4;" width="256" height="167.457"/>
-  <polygon style="fill:#F0F0F0;" points="127.999,118.382 139.049,152.392 174.813,152.392 145.881,173.413 156.931,207.425   127.999,186.404 99.066,207.425 110.119,173.413 81.187,152.392 116.949,152.392 "/>
 </svg>

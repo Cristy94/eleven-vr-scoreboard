@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-  <rect y="85.334" style="fill:#0052B4;" width="512" height="341.337"/>
-  <polygon style="fill:#F0F0F0;" points="512,295.883 202.195,295.883 202.195,426.666 183.652,426.666 140.978,426.666   122.435,426.666 122.435,295.883 0,295.883 0,277.329 0,234.666 0,216.111 122.435,216.111 122.435,85.329 140.978,85.329   183.652,85.329 202.195,85.329 202.195,216.111 512,216.111 512,234.666 512,277.329 "/>
-  <polygon style="fill:#D80027;" points="512,234.666 512,277.329 183.652,277.329 183.652,426.666 140.978,426.666 140.978,277.329   0,277.329 0,234.666 140.978,234.666 140.978,85.329 183.652,85.329 183.652,234.666 "/>
+<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-is" viewBox="0 0 640 480">
+  <defs>
+    <clipPath id="is-a">
+      <path fill-opacity=".7" d="M0 0h640v480H0z"/>
+    </clipPath>
+  </defs>
+  <g fill-rule="evenodd" stroke-width="0" clip-path="url(#is-a)">
+    <path fill="#003897" d="M0 0h666.7v480H0z"/>
+    <path fill="#fff" d="M0 186.7h186.7V0h106.6v186.7h373.4v106.6H293.3V480H186.7V293.3H0z"/>
+    <path fill="#d72828" d="M0 213.3h213.3V0h53.4v213.3h400v53.4h-400V480h-53.4V266.7H0z"/>
+  </g>
 </svg>

@@ -1,9 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-  <rect y="85.337" style="fill:#338AF3;" width="512" height="341.326"/>
-  <polygon style="fill:#FFDA44;" points="512,152.222 512,85.337 411.67,85.337 0,359.778 0,426.663 100.33,426.663 "/>
-  <polygon style="fill:#D80027;" points="512,85.337 512,125.462 60.193,426.663 0,426.663 0,386.538 451.807,85.337 "/>
-  <polygon style="fill:#FFDA44;" points="176.287,137.278 185.496,165.62 215.297,165.62 191.187,183.137 200.397,211.479   176.287,193.962 152.178,211.479 161.387,183.137 137.277,165.62 167.078,165.62 "/>
+<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-cd" viewBox="0 0 640 480">
+  <path fill="#007fff" d="M0 0h640v480H0z"/>
+  <path fill="#f7d618" d="M28.8 96H96l20.8-67.2L137.6 96h67.2l-54.4 41.6 20.8 67.2-54.4-41.6-54.4 41.6 20.8-67.2zM600 0 0 360v120h40l600-360V0z"/>
+  <path fill="#ce1021" d="M640 0 0 384v96L640 96z"/>
 </svg>

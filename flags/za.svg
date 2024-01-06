@@ -1,11 +1,17 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-  <rect y="85.337" style="fill:#F0F0F0;" width="512" height="341.326"/>
-  <polygon points="114.024,256.001 0,141.926 0,370.096 "/>
-  <polygon style="fill:#FFDA44;" points="161.192,256 0,94.7 0,141.926 114.024,256.001 0,370.096 0,417.234 "/>
-  <path style="fill:#6DA544;" d="M509.833,289.391L509.833,289.391c0.058-0.44,0.804-0.878,2.167-1.318V256v-33.391h-2.167H222.602  L85.33,85.337H0V94.7L161.192,256L0,417.234v9.429h85.33l137.272-137.272H509.833z"/>
-  <polygon style="fill:#0052B4;" points="503.181,322.783 236.433,322.783 132.552,426.663 512,426.663 512,322.783 "/>
-  <polygon style="fill:#D80027;" points="503.181,189.217 512,189.217 512,85.337 132.552,85.337 236.433,189.217 "/>
+<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-za" viewBox="0 0 640 480">
+  <defs>
+    <clipPath id="za-a">
+      <path fill-opacity=".7" d="M-71.9 0h682.7v512H-71.9z"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#za-a)" transform="translate(67.4)scale(.93748)">
+    <g fill-rule="evenodd" stroke-width="1pt">
+      <path fill="#000001" d="M-71.9 407.8V104.4L154 256.1z"/>
+      <path fill="#000c8a" d="m82.2 512.1 253.6-170.6H696V512H82.2z"/>
+      <path fill="#e1392d" d="M66 0h630v170.8H335.7S69.3-1.7 66 0"/>
+      <path fill="#ffb915" d="M-71.9 64v40.4L154 256-72 407.8v40.3l284.5-192z"/>
+      <path fill="#007847" d="M-71.9 64V0h95l301.2 204h371.8v104.2H324.3L23 512h-94.9v-63.9l284.4-192L-71.8 64z"/>
+      <path fill="#fff" d="M23 0h59.2l253.6 170.7H696V204H324.3zm0 512.1h59.2l253.6-170.6H696v-33.2H324.3L23 512z"/>
+    </g>
+  </g>
 </svg>

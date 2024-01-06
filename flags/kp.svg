@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-  <rect y="85.331" style="fill:#91DC5A;" width="512" height="341.337"/>
-  <rect y="85.331" style="fill:#F0F0F0;" width="512" height="341.337"/>
-  <g>
-    <rect y="85.331" style="fill:#0052B4;" width="512" height="57.188"/>
-    <rect y="369.48" style="fill:#0052B4;" width="512" height="57.177"/>
+<svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-kp" viewBox="0 0 640 480">
+  <defs>
+    <clipPath id="kp-a">
+      <path fill-opacity=".7" d="M5 .1h682.6V512H5.1z"/>
+    </clipPath>
+  </defs>
+  <g fill-rule="evenodd" clip-path="url(#kp-a)" transform="translate(-4.8 -.1)scale(.93768)">
+    <path fill="#fff" stroke="#000" d="M776 511.5H-76V.5h852z"/>
+    <path fill="#3e5698" d="M776 419H-76v92.5h852z"/>
+    <path fill="#c60000" d="M776 397.6H-76V114.4h852z"/>
+    <path fill="#3e5698" d="M776 .6H-76V93h852z"/>
+    <path fill="#fff" d="M328.5 256c0 63.5-53 115-118.6 115S91.3 319.5 91.3 256s53-114.8 118.6-114.8c65.5 0 118.6 51.4 118.6 114.9z"/>
+    <path fill="#c40000" d="m175.8 270.6-57-40.7 71-.2 22.7-66.4 21.1 66.1 71-.4-57.9 41.2 21.3 66.1-57-40.7-58 41.3z"/>
   </g>
-  <rect y="165.215" style="fill:#D80027;" width="512" height="181.582"/>
-  <circle style="fill:#F0F0F0;" cx="190.33" cy="255.994" r="65.668"/>
-  <polygon style="fill:#D80027;" points="190.332,190.332 205.066,235.678 252.823,235.678 214.173,263.706 229.022,309.187   190.332,281.027 151.701,309.134 166.491,263.706 127.875,235.678 175.597,235.678 "/>
 </svg>
