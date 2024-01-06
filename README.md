@@ -1,5 +1,5 @@
 # ElevenVR Live Scoreboard
-Live scoreboard for the [ElevenVR](https://www.elevenvr.net/) Table Tennis game, useful for streamers.
+Live scoreboard for the [ElevenVR](https://elevenvr.com/) Table Tennis game, useful for streamers.
 
 <img width="939" alt="image" src="https://github.com/Cristy94/eleven-vr-scoreboard/assets/1384885/e7ef1f7a-f929-4f27-8464-c2abd019a8fa">
 
