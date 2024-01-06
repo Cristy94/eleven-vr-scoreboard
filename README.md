@@ -1,7 +1,8 @@
 # ElevenVR Live Scoreboard
 Live scoreboard for the [ElevenVR](https://www.elevenvr.net/) Table Tennis game, useful for streamers.
 
-<img width="653" alt="image" src="https://github.com/Cristy94/eleven-vr-scoreboard/assets/1384885/9a0d058b-c02c-45ec-8ae2-218972f688f5">
+<img width="939" alt="image" src="https://github.com/Cristy94/eleven-vr-scoreboard/assets/1384885/e7ef1f7a-f929-4f27-8464-c2abd019a8fa">
+
 
 
 ![image](https://user-images.githubusercontent.com/1384885/119359118-92018480-bca9-11eb-9816-91d427e38566.png)
