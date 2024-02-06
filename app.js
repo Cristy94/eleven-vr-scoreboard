@@ -1,6 +1,5 @@
 const UPDATE_INTERVAL_MS = 3000;
-const API_URL = 'https://www.elevenvr.club';
-const API_URL_V2 = 'http://api2.elevenvr.com';
+const API_URL = 'https://api3.elevenvr.com';
 const LAST_MATCHES_SHOWN_COUNT = 1;
 const QUERY_API_KEY = 'apiKey';
 const QUERY_PARAM_USERID = 'user';
@@ -46,13 +45,11 @@ const App = {
             flag_1: flag_1 || '',
             flag_2: flag_2 || '',
             autoFlags: getValAsBoolean(autoFlags),
+            apiFetchError: false,
 
         }
     },
     computed: {
-        useAPIV2() {
-            return !!this.apiKey;
-        },
         teamsReversed() {
             return this.teams.slice().reverse();
         }
@@ -118,11 +115,7 @@ const App = {
     },
     methods: {
         getAPIURL(path) {
-            if (this.useAPIV2) {
-                // TODO: Disable CORS proxy once API v2 allows CORS requests
-                return 'https://corsproxy.io/?' + encodeURIComponent(`${API_URL_V2}${path}?api-key=${this.apiKey}`);
-            }
-            return `${API_URL}${path}`;
+            return `${API_URL}${path}?api-key=${this.apiKey}`;
         },
         updateUrlParams() {
             history.pushState(null, null, "?" + urlParams.toString());
@@ -170,6 +163,7 @@ const App = {
             fetch(this.getAPIURL(`/accounts/${this.userID}/matches`))
                 .then(res => res.json())
                 .then(data => {
+                    this.apiFetchError = false;
 
                     // Count matches score for those opponents
                     let otherIDPrevious = -1;
@@ -205,10 +199,6 @@ const App = {
                             return data.included.find((inclRound) => inclRound.id == r.id && inclRound.type === r.type).attributes;
                         });
 
-                        if (!this.useAPIV2) {
-                            // Old API returns match scores reversed
-                            scores = scores.reverse();
-                        }
                         return {
                             ...m,
                             scores
@@ -218,6 +208,8 @@ const App = {
                     // TODO: We do this every tick, maybe we could cache account info
                     // But what if account changes? How do we force refresh? Re-add OBS source?
                     this.loadAccountsAndSetFlags();
+                }).catch(() => {
+                    this.apiFetchError = true;
                 });
 
             updateHandle = setTimeout(() => this.updateMatches(), UPDATE_INTERVAL_MS);

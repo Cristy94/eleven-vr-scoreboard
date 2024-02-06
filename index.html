@@ -62,9 +62,15 @@
             </div>
         </div>
 
-        <br/>
-        <br/>
-        <div style="font-size: 12px;margin-left: 20px">Using API version: {{useAPIV2 ? 'V2' : 'V1 (enter API key to switch to API V2)'}}</div>
+        <br />
+        <br />
+        <div style="font-size: 12px;margin-left: 20px">
+            <span v-if="apiFetchError">
+                Can not connect to API. Please check your
+                <a href="https://discord.com/invite/forfunlabs" target="_blank">API key</a>.
+            </span>
+            <span v-else>API key ok.</span>
+        </div>
         <div id="credits">
             Scoreboard created by <a href="https://twitter.com/XCSme" target="_blank">XCS</a> 🏓
         </div>
