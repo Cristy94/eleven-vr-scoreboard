@@ -48,6 +48,11 @@ If the matches score is wrong you can offset it using query params `home-offset`
 ## Changelog
 
 ```
+6 February 2024
+* Removed CORS proxy.
+* APIv1 was removed (ElevenVR disabled it)
+* Improve API key text and add a link to ETT Discord.
+
 6 January 2024
 * Added support for ElevenVR API V2 (NOTE!: Currently using a proxy, until API allows CORS requests)
 * Added option to automatically load player flags from their profile.
