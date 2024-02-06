@@ -129,7 +129,7 @@ const App = {
                 return;
             }
 
-            if (!this.autoFlags || !this.apiKey) {
+            if (!this.autoFlags) {
                 return;
             }
 

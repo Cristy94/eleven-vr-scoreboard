@@ -45,10 +45,10 @@
                 <option value="" selected>--hide flag AWAY--</option>
                 <option v-for="(country, countryCode) in countries" :key="countryCode">{{countryCode}}</option>
             </select>
-            <label for="autoFlags">Auto Flags (V2 only)</label>
-            <input name="autoFlags" id="autoFlags" type="checkbox" v-model="autoFlags" :disabled="!this.apiKey" />
+            <label for="autoFlags">Auto Flags </label>
+            <input name="autoFlags" id="autoFlags" type="checkbox" v-model="autoFlags" />
 
-            <label for="apiKey" title="If set, uses the new API">APIV2 KEY</label>
+            <label for="apiKey" title="If set, uses the new API">API KEY</label>
             <input name="apiKey" id="apiKey" type="text" v-model="apiKey" />
         </div>
         <div id='matches'>
@@ -69,7 +69,7 @@
                 Can not connect to API. Please check your
                 <a href="https://discord.com/invite/forfunlabs" target="_blank">API key</a>.
             </span>
-            <span v-else>API key ok.</span>
+            <span v-else>API V3 key ok.</span>
         </div>
         <div id="credits">
             Scoreboard created by <a href="https://twitter.com/XCSme" target="_blank">XCS</a> 🏓
